@@ -4,12 +4,15 @@ BEFORE INSERT ON Transactions
 FOR EACH ROW
 BEGIN
    DECLARE current_balance DECIMAL(15,2);
-   SELECT balance INTO current_balance 
-   FROM Accounts 
-   WHERE account_id = NEW.from_account_id;
    IF NEW.transaction_type IN ('Withdrawal', 'Transfer') THEN
+      IF NEW.from_account_id is NULL THEN
+         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'from_account_id is required';
+      END IF;
+      SELECT balance INTO current_balance
+      FROM Accounts 
+      WHERE account_id = NEW.from_account_id; 
       IF current_balance < NEW.amount THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insufficient balance';
+         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insufficient balance';
       END IF;
    END IF;
 END //
