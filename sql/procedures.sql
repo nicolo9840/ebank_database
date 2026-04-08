@@ -3,12 +3,12 @@ CREATE PROCEDURE TransferFunds( IN from_id INT, IN to_id INT, IN amount DECIMAL(
 BEGIN 
    START TRANSACTION;   
    IF (SELECT balance FROM Accounts WHERE account_id = from_id) < amount THEN
-        ROLLBACK; 
+      ROLLBACK; 
    ELSE 
-   	INSERT INTO Transactions (transaction_type, amount, description, status, transaction_date, from_account_id, to_account_id) 
-	VALUES ('Transfer', amount, 'Transfer', 'Completed', NOW(), from_id, to_id); 
- 	COMMIT; 
-    END IF; 
+      INSERT INTO Transactions (transaction_type, amount, description, status, transaction_date, from_account_id, to_account_id) 
+      VALUES ('Transfer', amount, 'Transfer', 'Completed', NOW(), from_id, to_id); 
+      COMMIT; 
+   END IF; 
 END // 
 
 DELIMITER //
