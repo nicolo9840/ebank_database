@@ -1,5 +1,5 @@
 DELIMITER //
-CREATE PROCEDURE TransferFunds( IN from_id INT, IN to_id INT, IN amount DECIMAL(15,2) )
+CREATE PROCEDURE transfer_funds( IN from_id INT, IN to_id INT, IN amount DECIMAL(15,2) )
 BEGIN
    START TRANSACTION;
    IF (SELECT balance FROM Accounts WHERE account_id = from_id) < amount THEN
@@ -14,7 +14,7 @@ END //
 DELIMITER ; 
 
 DELIMITER //
-CREATE PROCEDURE GetAccountStatement(IN acc_id INT, IN start_date DATE, IN end_date DATE)
+CREATE PROCEDURE get_account_statement(IN acc_id INT, IN start_date DATE, IN end_date DATE)
 BEGIN
     SELECT transaction_id, transaction_type, amount, description, transaction_date, status
     FROM Transactions
@@ -24,7 +24,7 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE FreezeAccount(IN acc_id INT)
+CREATE PROCEDURE freeze_account(IN acc_id INT)
 BEGIN
    DECLARE current_status VARCHAR(20);
    SELECT status INTO current_status FROM Accounts WHERE account_id = acc_id;
